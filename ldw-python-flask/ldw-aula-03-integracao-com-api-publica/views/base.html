@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>The Games</title>
+</head>
+<body>
+    <header>
+        <h1 style="text-align: center;">The Games</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{url_for('games')}}">Página de Jogos</a></li>
+            <li><a href="{{url_for('newgame')}}">Cadastrar Jogos</a></li>
+        </ul>
+    </nav>
+
+    <!-- Aqui irá o conteúdo das outras páginas (bloco de conteúdo) -->
+    {% block content %}
+
+    {% endblock %}
+
+    <footer>
+        <p style="text-align: center;">Todos os Direitos Reservados &reg;</p>
+    </footer>
+</body>
+</html>
