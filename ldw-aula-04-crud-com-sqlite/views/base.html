@@ -8,15 +8,34 @@
     <title>The Games</title>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="{{url_for('home')}}">The Games</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="{{url_for('home')}}">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('games')}}">Games</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('newgame')}}">Cadastrar Game</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('apigames')}}">ApiGames</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('estoque')}}">Estoques</a>
+      </li>
+    </ul>
+  </div>
+</nav>
     <header>
         <h1 style="text-align: center;">The Games</h1>
     </header>
-    <nav>
-        <ul>
-            <li><a href="{{url_for('games')}}">Página de Jogos</a></li>
-            <li><a href="{{url_for('newgame')}}">Cadastrar Jogos</a></li>
-        </ul>
-    </nav>
 
     <!-- Aqui irá o conteúdo das outras páginas (bloco de conteúdo) -->
     {% block content %}

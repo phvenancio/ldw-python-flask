@@ -1,11 +1,12 @@
 from flask import render_template, request, redirect, url_for
 import urllib, json 
+from models.database import Game, db
 # Envia requisições a uma URL / Faz a conversão de dados json -> dicionário
 
 def init_app(app): 
     # Lista em Python (array)
     players = ["Yan", "Ferrari", "Valéria", "Amanda"]
-    
+     
     gamelist = [{"Titulo":"CS 1.6", "Ano":1996, "Categoria":"FPS Online"}]
     # Definindo a rota principal da aplicação "/"
     @app.route("/")
@@ -62,4 +63,36 @@ def init_app(app):
                 return f"Game com a ID {id} não foi encontrado."
         else:       
             return render_template("apigames.html", gamesList=gamesList)
+    
+    @app.route('/estoque', methods=["GET", "POST"])
+    @app.route('/estoque/delete/<int:id>')
+    def estoque(id=None):
+        if id:
+            game = Game.query.get(id)
+            db.session.delete(game)
+            db.session.commit()
+            return redirect(url_for('estoque'))
+        if request.method == 'POST':
+            newGame = Game(request.form['title'], request.form['year'], request.form['category'], request.form['platform'], request.form['price'], request.form['quantity'])
+            db.session.add(newGame)
+            db.session.commit()
+            return redirect(url_for('estoque'))
+        gamesEstoque = Game.query.all()
+        return render_template('estoque.html', gamesEstoque=gamesEstoque)
+    
+    @app.route('/edit/<int:id>', methods=['GET', 'POST'])
+    def edit(id):
+        game = Game.query.get(id)
+        
+        if request.method == 'POST':
+            game.title = request.form['title']
+            game.year = request.form['year']
+            game.category = request.form['category']
+            game.platform = request.form['platform']
+            game.price = request.form['price']
+            game.quantity = request.form['quantity']
+            db.session.commit()
+            return redirect(url_for('estoque'))
+        return render_template('editgame.html', game=game)
+        
     
