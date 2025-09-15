@@ -1,24 +1,68 @@
 {% extends "base.html" %}
 {% block content %}
 
-<main class="container flex-fill ms-5">
-    <div class="mt-3 mb-5">
-        <h2 class="mb-3">✨ Destaques da Semana</h2>
-        {% if highlights %}
-            {% for music in highlights %}
-                <p class="ms-5"><strong>{{music.Artista}}</strong> - {{music.Titulo}} ({{music.Ano}})</p>
-            {% endfor %}
-        {% else %}
-            <p class="ms-5 text-muted">Nenhuma música disponível no momento!</p>
-        {% endif %}
+<main class="container mt-5">
+    <h2 class="fw-bold mb-4">Bem-vindo à Sua Biblioteca Musical</h2>
+    <div class="mt-5">
+        <h4 class="mb-3">🔍 Buscar músicas</h4>
+        <form method="GET" action="{{ url_for('apimusic') }}" class="d-flex gap-2">
+            <input type="text" name="genre" class="form-control" placeholder="Gênero ou artista">
+            <button type="submit" class="btn btn-dark button-dark">Buscar</button>
+        </form>
     </div>
-
-    <div class="mt-3 mb-5">
-        <h4 class="mb-3">O que você pode fazer aqui?</h4>
-        <ul class="list-unstyled my-3">
-            <li class="my-1 ms-3">📀 Cadastrar e listar músicas</li>
-            <li class="my-1 ms-3">🎤 Adicionar artistas à sua coleção</li>
-        </ul>
+    <div class="mt-5">
+        <h4 class="mb-3">🎵 Destaques:</h4>
+        <div class="row row-cols-2 row-cols-md-4 g-3">
+            {% for music in highlights %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    {% if music.artworkUrl100 %}
+                        <img src="{{ music.artworkUrl100|replace('100x100bb','500x500bb') }}" class="card-img-top" alt="Capa">
+                    {% endif %}
+                    <div class="card-body p-2">
+                        <p class="card-title mb-1 fw-bold" style="font-size: 0.9rem;">{{ music.trackName }}</p>
+                        <p class="card-text mb-1 text-muted" style="font-size: 0.8rem;">{{ music.artistName }}</p>
+                        <a href="{{ url_for('apimusic', id=music.trackId) }}" class="btn btn-sm btn-dark w-100 button-dark" style="font-size: 0.8rem;">Ver Detalhes</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="mt-2">
+        <h6 class="mb-2">🎶 Gêneros populares</h6>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ url_for('apimusic', genre='Pop') }}" class="btn btn-outline-dark btn-sm button-dark">Pop</a>
+            <a href="{{ url_for('apimusic', genre='Rock') }}" class="btn btn-outline-dark btn-sm button-dark">Rock</a>
+            <a href="{{ url_for('apimusic', genre='Hip-Hop') }}" class="btn btn-outline-dark btn-sm button-dark">Hip-Hop</a>
+            <a href="{{ url_for('apimusic', genre='Jazz') }}" class="btn btn-outline-dark btn-sm button-dark">Jazz</a>
+        </div>
+    </div>
+    <div class="mt-5">
+        <h4 class="mb-3">🆕 Novos lançamentos</h4>
+        <div class="row row-cols-2 row-cols-md-4 g-3">
+            {% for music in new_releases %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ music.artworkUrl100|replace('100x100bb','500x500bb') }}" class="card-img-top" alt="Capa">
+                    <div class="card-body p-2">
+                        <p class="card-title mb-1 fw-bold" style="font-size: 0.9rem;">{{ music.trackName }}</p>
+                        <p class="card-text mb-1 text-muted" style="font-size: 0.8rem;">{{ music.artistName }}</p>
+                        <a href="{{ url_for('apimusic', id=music.trackId) }}" class="btn btn-sm btn-dark w-100" style="font-size: 0.8rem;">Ver Detalhes</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="mt-5">
+        <h4 class="mb-3">💡 Descubra algo novo</h4>
+        {% if random_music %}
+            <div class="card shadow-sm p-3 text-center bg-dark text-white">
+                <p><strong>{{ random_music.trackName }}</strong> - {{ random_music.artistName }}</p>
+                <a href="{{ url_for('apimusic', id=random_music.trackId) }}" class="btn btn-light btn-sm">Ouvir agora</a>
+            </div>
+        {% endif %}
     </div>
 </main>
 

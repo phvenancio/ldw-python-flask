@@ -64,6 +64,7 @@ def init_app(app):
         else:       
             return render_template("apigames.html", gamesList=gamesList)
     
+    
     @app.route('/estoque', methods=["GET", "POST"])
     @app.route('/estoque/delete/<int:id>')
     def estoque(id=None):

@@ -1,27 +1,99 @@
-<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Musique</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        /* --- Navbar --- */
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: #5e21ae !important; /* roxo lilás */
+            transition: color 0.2s ease-in-out;
+        }
+        
+        .navbar-dark .navbar-nav .nav-link.active {
+            color: #5e21ae !important;
+            font-weight: bold;
+        }
+        
+        /* --- Paginação --- */
+        .pagination .page-link {
+            color: #f0f0f0; 
+            background-color: #212529;
+            border: 1px solid #343a40;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .pagination .page-link:hover {
+            background-color: #7142ae;
+            border-color: #5e21ae;
+            color: #f0f0f0;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: #5e21ae;
+            border-color: #5e21ae;
+            color: #f0f0f0;
+        }
+
+        .button-dark:hover {
+            background-color: #7142ae !important;
+            border-color: #5e21ae !important;
+            color: #f0f0f0 !important;
+        }
+        
+
+        /* Botões com cor #5e21ae */
+        audio::-webkit-media-controls-play-button:hover,
+        audio::-webkit-media-controls-pause-button:hover,
+        audio::-webkit-media-controls-mute-button:hover,
+        audio::-webkit-media-controls-volume-slider,
+        audio::-webkit-media-controls-volume-slider-container,
+        audio::-webkit-media-controls-timeline {
+            filter: invert(23%) sepia(84%) saturate(6211%) hue-rotate(257deg) brightness(83%) contrast(89%);
+        }
+    </style>
 </head>
-<body class="d-flex flex-column min-vh-100">
-    <nav class="text-center p-3 gap-0" style="background-color: #ce8eff;">
-        <ul class="list-unstyled d-flex justify-content-center gap-5 mb-0 fs-5">
-            <li class="nav-item"><a href="{{url_for('home')}}" class="nav-link">Início</a></li>
-            <li class="nav-item"><a href="{{url_for('musics')}}" class="nav-link">Músicas</a></li>
-            <li class="nav-item"><a href="{{url_for('artists')}}" class="nav-link">Artistas</a></li>
-            <li class="nav-item"><a href="{{url_for('apimusic')}}" class="nav-link">Biblioteca</a></li>
-        </ul>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+        <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">🎶 Musique</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-3">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'home' %}active{% endif %}" href="{{ url_for('home') }}">Início</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'musics' %}active{% endif %}" href="{{ url_for('musics') }}">Músicas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'artists' %}active{% endif %}" href="{{ url_for('artists') }}">Artistas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'apimusic' %}active{% endif %}" href="{{ url_for('apimusic') }}">Biblioteca</a>
+                </li>
+            </ul>
+        </div>
     </nav>
 
-    {% block content %}
-    {% endblock %}
+    <!-- Conteúdo da página -->
+    <div class="container my-4">
+        {% block content %}
+        
+        {% endblock %}
+    </div>
 
-
-    <footer class="bg-dark text-white p-3">
-        <p class="text-center">Todos os Direitos Reservados &reg;</p>
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <small>© 2025 Musique - Todos os direitos reservados 🎵</small>
     </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,93 +1,104 @@
-{% extends "base.html" %}
+{% extends "base.html" %} 
 {% block content %}
 
-<div class="container mt-4">
-    <div class="d-flex align-items-center justify-content-between my-4">
-        <h2 class="mb-0">🎵 Biblioteca de Músicas</h2>
 
-        <!-- Formulário de busca -->
-        <form id="filterForm" method="POST" action="{{ url_for('apimusic') }}" class="d-flex align-items-center g-2">
+<div class="container mt-4"> 
+    <div class="d-flex align-items-center justify-content-between my-4"> 
+
+        <h2 class="fw-bold mb-4">Biblioteca</h2> <!-- Formulário de busca --> 
+        <form id="filterForm" method="POST" action="{{ url_for('apimusic') }}" class="d-flex align-items-center g-2"> 
             <input 
                 type="text" 
                 name="genre" 
                 class="form-control" 
-                placeholder="Pesquisar"
-                value="{{ selected_genre }}"
-                onchange="document.getElementById('filterForm').submit()">
+                placeholder="Pesquisar" 
+                value="{{ search }}" 
+                onchange="document.getElementById('filterForm').submit()"> 
+            
+            <!-- Select de ordenação --> 
+            <select name="sort_by" class="form-select me-2" onchange="document.getElementById('filterForm').submit()"> 
+                <option value="trackName" {% if sort_by == 'trackName' %}selected{% endif %}>Nome</option> 
+                <option value="artistName" {% if sort_by == 'artistName' %}selected{% endif %}>Artista</option> 
+                <option value="collectionName" {% if sort_by == 'collectionName' %}selected{% endif %}>Album</option> 
+                <option value="releaseDate" {% if sort_by == 'releaseDate' %}selected{% endif %}>Ano</option> 
+            </select> 
+        </form> 
+    </div> 
 
-            <!-- Select de ordenação -->
-            <select name="sort_by" class="form-select me-2" onchange="document.getElementById('filterForm').submit()">
-                <option value="trackName" {% if sort_by == 'trackName' %}selected{% endif %}>Nome</option>
-                <option value="artistName" {% if sort_by == 'artistName' %}selected{% endif %}>Artista</option>
-                <option value="collectionName" {% if sort_by == 'collectionName' %}selected{% endif %}>Album</option>
-                <option value="releaseDate" {% if sort_by == 'releaseDate' %}selected{% endif %}>Ano</option>
-            </select>
-        </form>
-    </div>
 
     <!-- Lista de músicas -->
-    {% if music_list %}
-    <ul class="list-group">
-        {% for music in music_list %}
-            <li class="list-group-item">
-                <div class="d-flex align-items-center">
-                    <img src="{{ music.artworkUrl100 }}" alt="Capa" class="me-3 rounded" width="80">
-                    <div class="flex-grow-1">
-                        <strong>{{ music.trackName }}</strong> - {{ music.collectionName }} 
-                        <span class="badge bg-secondary ms-2">{{ music.releaseDate[:4] }}</span><br>
-                        <small class="text-muted">{{ music.artistName }}</small> 
-                        <a href="{{url_for('apimusic', id=music.trackId)}}" class="btn btn-dark" style="border-radius: 25px;">+ Info</a>
-                        {% if music.previewUrl %}
-                            <audio controls class="mt-2 music-player" style="width: 100%;">
-                                <source src="{{ music.previewUrl }}" type="audio/mpeg">
-                            </audio>
-                        {% endif %}
-                    </div>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+    {% if no_results %}
+        <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <p><i class="bi bi-exclamation-triangle-fill me-2"></i>
+            Nenhuma música encontrada para "<strong>{{ search }}</strong>".
+            Tente outra coisa ou  <a href="{{ url_for('apimusic') }}"> reinicie a busca </a>.</p>
+        </div>
     {% else %}
-        <p class="text-muted">Nenhuma música encontrada para o gênero "{{ search }}".</p>
+        {% if music_list %} 
+            <ul class="list-group dark"> 
+                {% for music in music_list %} 
+                    <li class="list-group-item"> 
+                        <div class="d-flex align-items-center"> 
+                            <img src="{{ music.artworkUrl100 }}" alt="Capa" class="me-3 rounded" width="80"> 
+                            <div class="flex-grow-1"> 
+                                <strong>{{ music.trackName }}</strong> - {{ music.collectionName }} 
+                                <span class="badge bg-secondary ms-2">{{ music.releaseDate[:4] }}</span><br> 
+                                <small class="text-muted">{{ music.artistName }}</small> 
+                                <a href="{{ url_for('apimusic', id=music.trackId) }}" class="btn btn-sm btn-dark px-1 py-1 button-dark ms-3" style="font-size: 0.7rem; border-radius: 25px;" title="Mais informações">
+                                    <i class="bi bi-info-circle"></i>
+                                </a> 
+                                {% if music.previewUrl %} 
+                                    <audio controls class="mt-2 music-player" style="width: 100%;"> 
+                                        <source src="{{ music.previewUrl }}" type="audio/mpeg"> 
+                                    </audio> 
+                                {% endif %} 
+                            </div> 
+                        </div> 
+                    </li> 
+                {% endfor %} 
+            </ul> 
+        {% endif %} 
     {% endif %}
     
-    <!-- Paginação -->
-    <nav class="mt-3">
-        <ul class="pagination">
-            {% if page > 1 %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page - 1 }}&genre={{ search }}&sort_by={{ sort_by }}">Anterior</a>
-                </li>
-            {% endif %}
-            {% for p in range(1, total_pages + 1) %}
-                <li class="page-item {% if p == page %}active{% endif %}">
-                    <a class="page-link" href="?page={{ p }}&genre={{ search }}&sort_by={{ sort_by }}">{{ p }}</a>
-                </li>
-            {% endfor %}
-            {% if page < total_pages %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page + 1 }}&genre={{ search }}&sort_by={{ sort_by }}">Próxima</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
-</div>
 
-<script>
+    <!-- Paginação --> 
+    <nav class="mt-3"> 
+        <ul class="pagination"> 
+            {% if page > 1 %} 
+                <li class="page-item"> 
+                    <a class="page-link" href="?page={{ page - 1 }}&genre={{ search }}&sort_by={{ sort_by }}">Anterior</a> 
+                </li> 
+            {% endif %} 
+            {% for p in range(1, total_pages + 1) %} 
+                <li class="page-item {% if p == page %}active{% endif %}"> 
+                    <a class="page-link" href="?page={{ p }}&genre={{ search }}&sort_by={{ sort_by }}">{{ p }}</a> 
+                </li> 
+            {% endfor %} 
+            {% if page < total_pages %} 
+                <li class="page-item"> 
+                    <a class="page-link" href="?page={{ page + 1 }}&genre={{ search }}&sort_by={{ sort_by }}">Próxima</a> 
+                </li> 
+            {% endif %} 
+        </ul> 
+    </nav> 
+</div> 
+
+
+<script> 
     document.addEventListener("DOMContentLoaded", () => {
-        const players = document.querySelectorAll(".music-player");
-
-        players.forEach(player => {
+        const players = document.querySelectorAll(".music-player"); 
+        players.forEach(player => { 
             player.addEventListener("play", () => {
-                // pausa todos os outros
-                players.forEach(other => {
-                    if (other !== player) {
-                        other.pause();
-                    }
-                });
-            });
-        });
-    });
-</script>
+                // pausa todos os outros 
+                players.forEach(other => { 
+                    if (other !== player) { 
+                        other.pause(); 
+                    } 
+                }); 
+            }); 
+        }); 
+    }); 
+</script> 
+
 
 {% endblock content %}

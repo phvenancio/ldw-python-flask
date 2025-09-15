@@ -38,17 +38,17 @@
                 <!-- Navegação de músicas -->
                 <div class="d-flex justify-content-between mb-4">
                     {% if previous_id %}
-                        <a href="{{ url_for('apimusic', id=previous_id) }}" class="btn btn-outline-primary">← Anterior</a>
+                        <a href="{{ url_for('apimusic', id=previous_id) }}" class="btn btn-dark button-dark">← Anterior</a>
                     {% else %}
-                        <span></span>
+                        <span>Sem Anterior</span>
                     {% endif %}
 
-                    <a href="{{ url_for('apimusic') }}" class="btn btn-secondary">Voltar à Biblioteca</a>
+                    <a href="{{ url_for('apimusic') }}" class="btn btn-secondary button-dark">Voltar à Biblioteca</a>
 
                     {% if next_id %}
-                        <a href="{{ url_for('apimusic', id=next_id) }}" class="btn btn-outline-primary">Próxima →</a>
+                        <a href="{{ url_for('apimusic', id=next_id) }}" class="btn btn-dark button-dark">Próxima →</a>
                     {% else %}
-                        <span></span>
+                        <span>Sem Posterior</span>
                     {% endif %}
                 </div>
             </div>
@@ -68,7 +68,7 @@
                     <div class="card-body p-2">
                         <p class="card-title mb-1 fw-bold" style="font-size: 0.9rem;">{{ music.trackName }}</p>
                         <p class="card-text mb-1 text-muted" style="font-size: 0.8rem;">{{ music.artistName }}</p>
-                        <a href="{{ url_for('apimusic', id=music.trackId) }}" class="btn btn-sm btn-outline-primary w-100" style="font-size: 0.8rem;">Ver Detalhes</a>
+                        <a href="{{ url_for('apimusic', id=music.trackId) }}" class="btn btn-sm btn-dark w-100 button-dark" style="font-size: 0.8rem;">Ver Detalhes</a>
                     </div>
                 </div>
             </div>
