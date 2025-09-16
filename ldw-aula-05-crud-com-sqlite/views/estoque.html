@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
+
+
 <h2>Controle de estoque</h2>
 <hr>
+
 <details>
     <summary>[ Cadastrar Jogo ]</summary>
     <div class="col-md-4">
@@ -18,6 +21,7 @@
     </div>
 </details>
 <hr>
+
 <table class="table table-bordered table-hover">
     <thead class="table-dark">
         <tr>
@@ -45,5 +49,18 @@
         {% endfor %}
     </tbody>
 </table>
+
+<!-- Paginação -->
+<p style="text-align: center;">
+    {% if gamesEstoque.has_prev %}
+        <a href="{{ url_for('estoque', page=gamesEstoque.prev_num) }}" class="btn btn-primary">Anterior</a>
+    {% endif %}
+
+    {% if gamesEstoque.has_next %}
+        <a href="{{ url_for('estoque', page=gamesEstoque.next_num) }}" class="btn btn-primary">Próxima</a>
+    {% endif %}
+
+</p>
+
 
 {% endblock content %}

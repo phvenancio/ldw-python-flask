@@ -3,6 +3,7 @@ import urllib, json
 from models.database import Game, db
 # Envia requisições a uma URL / Faz a conversão de dados json -> dicionário
 
+
 def init_app(app): 
     # Lista em Python (array)
     players = ["Yan", "Ferrari", "Valéria", "Amanda"]
@@ -77,8 +78,14 @@ def init_app(app):
             newGame = Game(request.form['title'], request.form['year'], request.form['category'], request.form['platform'], request.form['price'], request.form['quantity'])
             db.session.add(newGame)
             db.session.commit()
-            return redirect(url_for('estoque'))
-        
+        else:
+            # Paginação
+            page = request.args.get("page", 1, type=int)
+            # Valor definido
+            per_page = 3
+            # Query com paginação
+            gamesEstoque = Game.query.paginate(page=page, per_page=per_page)
+            return render_template('estoque.html', gamesEstoque=gamesEstoque)
     
     
     @app.route('/edit/<int:id>', methods=['GET', 'POST'])
