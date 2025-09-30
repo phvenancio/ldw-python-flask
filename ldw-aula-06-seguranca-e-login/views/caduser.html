@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Coletando e exibindo as flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <div class="alert alert-{{category}}">
+            {{message}}
+        </div>
+    {% endfor %}
+{% endwith %}
+
+<div class="container">
+    <div class="card mt-4">
+
+        <div class="card-header">
+            <h2>Cadastro de Usuário</h2>
+        </div>
+
+        <div class="card-body">
+            <form action="{{url_for('caduser')}}" method="POST">
+                <label for="">Nome</label>
+                <input type="text" name="username" class="form-control" placeholder="Digite seu e-mail">
+                <label for="">Senha</label>
+                <input type="password" name="password" class="form-control" placeholder="Digite sua senha">
+                <br>
+                <button class="btn btn-danger btn-block">Cadastrar</button>
+                <hr>
+                <h6>Já possui conta? <a href="{{url_for('login')}}">Faça o Login!</a></h6>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

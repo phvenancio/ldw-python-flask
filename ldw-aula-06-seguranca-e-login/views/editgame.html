@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="col-md-6 m-auto">
+    <h3 style="text-align: center;">Editar jogo:</h3><br>
+    <form action="{{url_for('gameEdit', id=g.id)}}" method="POST">
+        <input type="text" name="titulo" class="form-control" value="{{g.titulo}}" required>
+        <input type="number" name="ano" value="{{g.ano}}" class="form-control" required>
+        <input type="text" name="categoria" value="{{g.categoria}}" class="form-control" required>
+
+        <input type="number" name="preco" value="{{g.preco}}" min=0 step="0.01" class="form-control" required>
+        <input type="number" name="quantidade" value="{{g.quantidade}}" class="form-control" required><br>
+     
+        <select name="console" class="form-select" required>
+            {% for console in consoles %}
+                <option value="{{console.id}}" {% if (g.console.id==console.id) %} selected 
+                {% endif %}>
+                    {{console.nome}}
+                </option>
+            {% endfor %}
+        </select>
+        <a href="{{url_for('gameEdit', id=g.id)}}" onclick="return confirm('Confirma as alterações?')"><input
+                type="submit" value="Alterar" class="btn btn-warning"></a>
+        <a href="{{url_for('gamesEstoque')}}"><input type="button" value="Cancelar" class="btn btn-danger"></a>
+    </form>
+</div>
+{% endblock content %}
