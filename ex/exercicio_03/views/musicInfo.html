@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+    <!-- Card principal -->
+    <div class="card shadow-lg rounded overflow-hidden">
+        <div class="row g-0">
+
+            <!-- Capa do álbum grande -->
+            <div class="col-md-5 text-center bg-dark d-flex align-items-center justify-content-center p-3">
+                {% if music_info.artworkUrl100 %}
+                    <img src="{{ music_info.artworkUrl100|replace('100x100bb','500x500bb') }}" 
+                         alt="Capa do Álbum" class="img-fluid rounded mb-3 shadow" style="max-height: 400px;">
+                {% else %}
+                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded" style="width: 100%; height: 300px;">
+                        Sem Capa
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Informações + Player -->
+            <div class="col-md-7 p-4">
+                <h2 class="fw-bold mb-3">{{ music_info.trackName }}</h2>
+                <p class="mb-1"><strong>Artista:</strong> {{ music_info.artistName }}</p>
+                <p class="mb-1"><strong>Álbum:</strong> {{ music_info.collectionName }}</p>
+                <p class="mb-1"><strong>Gênero:</strong> {{ music_info.primaryGenreName }}</p>
+                <p class="mb-3"><strong>Ano:</strong> {{ music_info.releaseDate[:4] }}</p>
+
+                <!-- Player de prévia -->
+                {% if music_info.previewUrl %}
+                    <audio controls class="w-100 mb-4">
+                        <source src="{{ music_info.previewUrl }}" type="audio/mpeg">
+                        Seu navegador não suporta o player de áudio.
+                    </audio>
+                {% endif %}
+
+                <!-- Navegação de músicas -->
+                <div class="d-flex justify-content-between mb-4">
+                    {% if previous_id %}
+                        <a href="{{ url_for('apimusic', id=previous_id) }}" class="btn btn-dark button-dark">← Anterior</a>
+                    {% else %}
+                        <span>Sem Anterior</span>
+                    {% endif %}
+
+                    <a href="{{ url_for('apimusic') }}" class="btn btn-secondary button-dark">Voltar à Biblioteca</a>
+
+                    {% if next_id %}
+                        <a href="{{ url_for('apimusic', id=next_id) }}" class="btn btn-dark button-dark">Próxima →</a>
+                    {% else %}
+                        <span>Sem Posterior</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Destaques adicionais -->
+    <div class="mt-5">
+        <h4 class="mb-3">🎵 Músicas Recomendadas:</h4>
+        <div class="row row-cols-2 row-cols-md-4 g-3">
+            {% for music in highlights %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    {% if music.artworkUrl100 %}
+                        <img src="{{ music.artworkUrl100|replace('100x100bb','500x500bb') }}" class="card-img-top" alt="Capa">
+                    {% endif %}
+                    <div class="card-body p-2">
+                        <p class="card-title mb-1 fw-bold" style="font-size: 0.9rem;">{{ music.trackName }}</p>
+                        <p class="card-text mb-1 text-muted" style="font-size: 0.8rem;">{{ music.artistName }}</p>
+                        <a href="{{ url_for('apimusic', id=music.trackId) }}" class="btn btn-sm btn-dark w-100 button-dark" style="font-size: 0.8rem;">Ver Detalhes</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}

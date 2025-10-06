@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<main class="container flex-fill ms-5">
+    <h4 class="mt-3">Editar Artista</h4>
+    <form action="{{url_for('artistEdit', id=artist.id)}}" method="POST">
+        <div class="form-group">
+            <label>Nome:</label>
+            <input type="text" name="name" value="{{artist.name}}" class="form-control w-50 mb-3">
+        </div>
+        <div class="form-group">
+            <label>Nacionalidade:</label>
+            <input type="text" name="nacionality" value="{{artist.nacionality}}" class="form-control w-50 mb-3">
+        </div>
+        <div class="form-group">
+            <label>Ano de Nascimento:</label>
+            <input type="number" name="birth_year" value="{{artist.birth_year}}" class="form-control w-50 mb-3">
+        </div>
+
+        <a href="{{url_for('artistEdit', id=artist.id)}}" onclick="return confirm('Confirma as alterações?')"><input type="submit" value="Alterar" class="btn btn-warning"></a>
+        <a href="{{url_for('artists')}}"><input type="button" value="Cancelar" class="btn btn-danger"></a>
+    </form>
+</main>
+
+{% endblock content %}

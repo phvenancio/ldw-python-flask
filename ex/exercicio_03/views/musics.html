@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+
+<main class="container flex-fill ms-5">
+    <h4 class="mt-3">Cadastro de Música</h4>
+    <form action="{{url_for('musics')}}" method="POST">
+        <div class="form-group">
+            <label>Título:</label>
+            <input type="text" name="title" class="form-control w-50 mb-3" required>
+        </div>
+        <div class="form-group">
+            <label>Artista:</label>
+            <select name="artist" id="form-select" class="form-control w-50 mb-3" required>
+                <option value="" selected disabled>Selecione um console...</option>
+                {% for artist in artists %}
+                    <option value="{{artist.id}}">{{artist.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Album:</label>
+            <input type="text" name="album" class="form-control w-50 mb-3" required>
+        </div>
+        <div class="form-group">
+            <label>Ano de Lançamento:</label>
+            <input type="text" name="release_year" class="form-control w-25 mb-3" required>
+        </div>
+        <input type="submit" value="Cadastrar" class="btn btn-dark mb-2 button-dark">
+    </form>
+    <hr>
+    
+    <h4 class="mt-3">Biblioteca de Músicas</h4>
+    <table class="table table-striped w-75 mt-3 mb-5">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Artista</th>
+                <th>Album</th>
+                <th>Ano</th>
+                <th style="text-align: center;" colspan="2">Ação:</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for music in musics_list %}
+            <tr>
+                <td>{{music.title}}</td>
+                <td>{{music.artist.name}}</td>
+                <td>{{music.album}}</td>
+                <td>{{music.release_year}}</td>
+                <td style="text-align: center; width: 130px;"><a class="btn btn-warning" href="{{url_for('musicEdit', id=music.id)}}">Editar</a></td>
+                <td style="text-align: center; width: 130px;"><a class="btn btn-danger" href="{{url_for('musics', id=music.id)}}" onclick="return confirm('Deseja mesmo excluir a música {{music.title}}?')">Excluir</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p style="text-align: center;">
+        <!-- Se houver registros anteriores -->
+        {% if musics_list.has_prev %}
+            <a href="{{url_for('musics', page=musics_list.prev_num)}}"><< Anterior</a>
+        {% endif %}
+        <!-- Se houver próximos registros -->
+        {% if musics_list.has_next %}
+            <a href="{{url_for('musics', page=musics_list.next_num)}}">Próximo >></a>
+    </p>
+        {% endif %}
+</main>
+
+{% endblock content %}
