@@ -17,7 +17,6 @@ routes.init_app(app)
 DB_NAME = 'thegames'
 # Configura o Flask com o banco definido
 app.config['DATABASE_NAME'] = DB_NAME
-
 # Passando o endereço do banco ao Flask
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://root@localhost/{DB_NAME}'
 
@@ -26,6 +25,11 @@ app.config["SECRET_KEY"] = "thegamessecret"
 
 # Define o tempo de duração da sessão
 app.config["PERMANENT_SESSION_LIFETIME"] = 1800
+
+# Define a pasta que receverá os arquivos de uploads
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
+# Define o tamanho máximo do arquivo (16MB)
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 # Iniciando o servidor no localhost, porta 5000, modo de depuração ativado
 if __name__ == '__main__':
@@ -50,7 +54,7 @@ if __name__ == '__main__':
         connection.close()
 
     # Passando o flask para SQLAlchemy
-    db.init_app(app=app)
+    db.init_app(app)
 
     # Criando as tabelas a partir do model
     with app.test_request_context():

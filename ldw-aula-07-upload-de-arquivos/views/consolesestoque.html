@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Controle de estoque - Consoles</h2><br>
+<details>
+    <summary>[ Cadastrar novo console ]</summary>
+    <div class="col-md-4">
+        <form action="{{url_for('consolesEstoque')}}" method="POST">
+            <input type="text" name="nome" placeholder="Nome" class="form-control" required>
+            <input type="text" name="fabricante" placeholder="Fabricante" class="form-control" required>
+            <input type="number" name="ano_lancamento" placeholder="Ano de lançamento" class="form-control"><br>
+            <input type="submit" value="Cadastrar" class="btn btn-success">
+            <input type="reset" value="Limpar" class="btn btn-danger">
+        </form>
+    </div>
+</details>
+<hr>
+<h5>Consoles em estoque:</h5><br>
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th style="width: 50px;"></th>
+            <th>Nome:</th>
+            <th>Fabricante:</th>
+            <th>Ano de lançamento:</th>
+            <th style="text-align: center;" colspan="2">Ação:</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for console in consolesestoque.items %}
+        <tr>
+            <td style="text-align: center;"><img src="{{url_for('static', filename='imgs/game-icon.png')}}"
+                    alt="Produto" width="40px"></td>
+            <td>{{console.nome}}</td>
+            <td>{{console.fabricante}}</td>
+            <td>{{console.ano_lancamento}}</td>
+            <td style="text-align: center; width: 130px;"><a class="btn btn-warning"
+                    href="{{url_for('consoleEdit', id=console.id)}}">Editar</a></td>
+            <td style="text-align: center; width: 130px;"><a class="btn btn-danger"
+                    href="{{url_for('consolesEstoque', id=console.id)}}"
+                    onclick="return confirm('Deseja mesmo excluir o console {{console.nome}}?')">Excluir</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p style="text-align: center;">
+    <!-- Se houver registros anteriores -->
+    {% if consolesestoque.has_prev %}
+    <a href="{{url_for('consolesEstoque', page=consolesestoque.prev_num)}}">
+        << Anterior</a>
+            {% endif %}
+            <!-- Se houver próximos registros -->
+            {% if consolesestoque.has_next %}
+            <a href="{{url_for('consolesEstoque', page=consolesestoque.next_num)}}">Próximo >></a>
+</p>
+{% endif %}
+{% endblock content %}

@@ -19,7 +19,7 @@ DB_NAME = 'thegames'
 app.config['DATABASE_NAME'] = DB_NAME
 
 # Passando o endereço do banco ao Flask
-app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://root@localhost/{DB_NAME}'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://root@localhost/{DB_NAME}'
 
 # Iniciando o servidor no localhost, porta 5000, modo de depuração ativado
 if __name__ == '__main__':
@@ -44,7 +44,7 @@ if __name__ == '__main__':
         connection.close()
 
     # Passando o flask para SQLAlchemy
-    db.init_app(app=app)
+    db.init_app(app)
 
     # Criando as tabelas a partir do model
     with app.test_request_context():

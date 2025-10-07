@@ -1,8 +1,9 @@
 from flask import render_template, request, url_for, redirect, flash, session
-from models.database import db, Game, Console, Usuario
+from models.database import db, Game, Console, Usuario, Imagem
 from werkzeug.security import generate_password_hash, check_password_hash
-import urllib
-import json
+import urllib, json, uuid, os
+# uuid - Gera um identificador único universal
+# os - Interage com o sistema operacional
 
 # Lista de jogadores
 jogadores = ['Jogador 1', 'Jogador 2', 'Jogador 3',
@@ -12,6 +13,18 @@ gamelist = [{'Título': 'CS-GO', 'Ano': 2012, 'Categoria': 'FPS Online'}]
 
 
 def init_app(app):
+    # Função de middleware para verificar a autenticação do usuário
+    @app.before_request
+    def check_auth():
+        # Rotas que não exigem autenticação
+        routes = ["home", "login", "caduser"]
+        if request.endpoint in routes or request.path.startswith('/static/'):
+            return
+        # Verifica se o usuário está autenticado
+        if "user_id" not in session:
+            flash("Você precisa estar logado para acessar essa página.", "warning")
+            return redirect(url_for("login"))
+    
     @app.route('/')
     def home():
         return render_template('index.html')
@@ -174,6 +187,7 @@ def init_app(app):
     @app.route("/logout", methods=["GET", "POST"])
     def logout():
         session.clear()
+        flash("Logout realizado com sucesso!", "success")
         return redirect(url_for("home"))
     
     
@@ -193,6 +207,37 @@ def init_app(app):
                 newUser = Usuario(username=username, password=hashed_password)
                 db.session.add(newUser)
                 db.session.commit()
-                flash("Registro realixado com sucesso1 Você já pode fazer o login!", "success")
+                flash("Registro realizado com sucesso. Você já pode fazer o login!", "success")
                 return redirect(url_for("login"))
         return render_template("caduser.html")
+    
+    
+    # Definindo tipos de arquivos permitidos
+    FILE_TYPES = set(["png", "jpg", "jpeg", "gif"])
+    def arquivos_permitidos(filename):
+        return "." in filename and filename.rsplit(".", 1)[1].lower() in FILE_TYPES
+    
+    @app.route('/galeria', methods=['GET', 'POST'])
+    def galeria():
+        # Selecionando todas as imagens do banco de dados
+        images = Imagem.query.all()
+        
+        if request.method == "POST":
+            # Captura o arquivo vindo do formulário
+            file = request.files['file']
+            # Enviando o nome do arquivo para a função para verificar se o tipo de arquivo é permitido
+            if not arquivos_permitidos(file.filename):
+                flash("Utilize somente os tipos de arquivos de imagens: png, jpg, jpeg e gif.", "danger")
+                return redirect(request.url) # Redireciona para a mesma página
+            else: 
+                # Definindo um nome único para o arquivo
+                filename = str(uuid.uuid4())
+                # Gravando o nome do arquivo no banco de dados
+                image = Imagem(filename)
+                db.session.add(image)
+                db.session.commit()
+                # Salva o arquivo
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                flash("Imagem enviada com sucesso!", "success")
+                return redirect(request.url)
+        return render_template('galeria.html', images=images)
